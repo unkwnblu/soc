@@ -1,65 +1,105 @@
-import Image from "next/image";
+import {
+  getFeaturedArticle,
+  getPublishedArticles,
+  getCategories,
+} from "@/lib/data";
+import HeroSection from "@/components/HeroSection";
+import ArticleCard from "@/components/ArticleCard";
+import StickerButton from "@/components/StickerButton";
 
-export default function Home() {
+export default async function HomePage() {
+  const [featured, articles, categories] = await Promise.all([
+    getFeaturedArticle(),
+    getPublishedArticles(),
+    getCategories(),
+  ]);
+
+  const discover = articles.slice(1);
+  const fashionArticles = articles.filter((a) =>
+    a.categories?.some((c) => c.slug === "fashion")
+  );
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <>
+      {/* Hero */}
+      {featured && <HeroSection article={featured} />}
+
+      {/* Discover Section */}
+      <section className="max-w-7xl mx-auto px-4 py-14">
+        <div className="flex items-baseline justify-between mb-8 border-b-2 border-black pb-4">
+          <h2 className="font-serif font-black text-5xl text-black">
+            Discover
+          </h2>
+          <StickerButton href="/search" variant="coral" rotate="2">
+            View All →
+          </StickerButton>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* Masonry grid */}
+        <div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
+          {discover.map((article) => (
+            <div key={article.id} className="break-inside-avoid mb-4">
+              <ArticleCard article={article} />
+            </div>
+          ))}
         </div>
-      </main>
-    </div>
+      </section>
+
+      {/* Fashion horizontal scroll section */}
+      <section className="border-y-2 border-black bg-yellow-300 py-14">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex items-baseline gap-4 mb-8 border-b-2 border-black pb-4">
+            <h2 className="font-serif font-black text-5xl text-black">
+              Fashion &amp; Style
+            </h2>
+            <StickerButton href="/fashion" variant="black" rotate="-1">
+              See All
+            </StickerButton>
+          </div>
+
+          {fashionArticles.length > 0 ? (
+            <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+              {fashionArticles.map((article) => (
+                <div key={article.id} className="flex-none w-72">
+                  <ArticleCard article={article} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="font-mono text-black/60">No fashion articles yet.</p>
+          )}
+        </div>
+      </section>
+
+      {/* Browse by Category */}
+      <section className="max-w-7xl mx-auto px-4 py-12">
+        <h2 className="font-serif font-black text-3xl text-black mb-6">
+          Browse by Category
+        </h2>
+        <div className="flex flex-wrap gap-3">
+          {categories.map((cat, i) => {
+            const rotates = ["-2", "1", "-1", "2", "3", "0"] as const;
+            const variants = [
+              "yellow",
+              "coral",
+              "black",
+              "white",
+              "yellow",
+              "coral",
+            ] as const;
+            return (
+              <StickerButton
+                key={cat.id}
+                href={`/${cat.slug}`}
+                variant={variants[i % variants.length]}
+                rotate={rotates[i % rotates.length]}
+              >
+                {cat.name}
+              </StickerButton>
+            );
+          })}
+        </div>
+      </section>
+    </>
   );
 }
