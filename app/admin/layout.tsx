@@ -44,7 +44,7 @@ export default async function AdminLayout({
             href="/"
             className="font-serif font-black text-lg text-white leading-tight hover:text-zinc-300 transition-colors"
           >
-            Souls of<br />Creative
+            Souls of<br />Creatives
           </a>
           <p className="font-mono text-[10px] text-zinc-600 mt-1 uppercase tracking-widest">
             CMS

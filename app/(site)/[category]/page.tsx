@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!cat) return { title: "Not Found" };
   return {
     title: cat.name,
-    description: `Browse ${cat.name} articles from Souls of Creative.`,
+    description: `Browse ${cat.name} articles from Souls of Creatives.`,
   };
 }
 
