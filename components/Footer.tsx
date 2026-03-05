@@ -72,7 +72,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
           <p className="font-mono text-xs text-white/40">
-            © {new Date().getFullYear()} Souls of Creative. All rights
+            © {new Date().getFullYear()} Souls of Creatives. All rights
             reserved.
           </p>
           <Link

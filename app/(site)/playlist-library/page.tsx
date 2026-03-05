@@ -6,7 +6,7 @@ import { Music } from "lucide-react";
 export const metadata: Metadata = {
   title: "Playlist Library",
   description:
-    "Curated playlists from Souls of Creative — the sounds of fashion, culture, and the creative life.",
+    "Curated playlists from Souls of Creatives — the sounds of fashion, culture, and the creative life.",
 };
 
 const platformColors: Record<string, string> = {
