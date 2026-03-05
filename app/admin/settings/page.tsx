@@ -3,12 +3,21 @@
 import { useState, useEffect } from "react";
 import { Settings, Mail, Lock, User, Shield, PenLine, CheckCircle, XCircle } from "lucide-react";
 
+const SUPABASE_CONFIGURED = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
+
 interface CurrentUser {
   id: string;
   email: string;
   role: string;
   created_at: string;
 }
+
+const DEV_USER: CurrentUser = {
+  id: "dev",
+  email: "soulsofcreatives7@gmail.com",
+  role: "admin",
+  created_at: new Date().toISOString(),
+};
 
 type Message = { text: string; type: "ok" | "err" };
 
@@ -22,12 +31,18 @@ export default function SettingsPage() {
   const [emailBusy, setEmailBusy] = useState(false);
 
   // Password form
+  const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordMsg, setPasswordMsg] = useState<Message | null>(null);
   const [passwordBusy, setPasswordBusy] = useState(false);
 
   useEffect(() => {
+    if (!SUPABASE_CONFIGURED) {
+      setUser(DEV_USER);
+      setLoading(false);
+      return;
+    }
     async function load() {
       try {
         const { createClient } = await import("@/lib/supabase/client");
@@ -54,6 +69,14 @@ export default function SettingsPage() {
     if (!newEmail.trim()) return;
     setEmailMsg(null);
     setEmailBusy(true);
+
+    if (!SUPABASE_CONFIGURED) {
+      setEmailMsg({ text: "Email updated (dev mode — not persisted).", type: "ok" });
+      setUser((u) => u ? { ...u, email: newEmail.trim() } : u);
+      setNewEmail("");
+      setEmailBusy(false);
+      return;
+    }
 
     try {
       const { createClient } = await import("@/lib/supabase/client");
@@ -85,6 +108,15 @@ export default function SettingsPage() {
     setPasswordMsg(null);
     setPasswordBusy(true);
 
+    if (!SUPABASE_CONFIGURED) {
+      setPasswordMsg({ text: "Password updated (dev mode — not persisted).", type: "ok" });
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setPasswordBusy(false);
+      return;
+    }
+
     try {
       const { createClient } = await import("@/lib/supabase/client");
       const supabase = createClient();
@@ -93,6 +125,7 @@ export default function SettingsPage() {
         setPasswordMsg({ text: error.message, type: "err" });
       } else {
         setPasswordMsg({ text: "Password updated successfully.", type: "ok" });
+        setCurrentPassword("");
         setNewPassword("");
         setConfirmPassword("");
       }
@@ -122,6 +155,14 @@ export default function SettingsPage() {
           <p className="font-mono text-xs text-zinc-400 mt-0.5">Manage your account</p>
         </div>
       </div>
+
+      {!SUPABASE_CONFIGURED && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
+          <p className="font-mono text-xs text-amber-700">
+            Dev mode — changes are not persisted.
+          </p>
+        </div>
+      )}
 
       {/* Profile card */}
       <section className="bg-white border border-zinc-200 rounded-lg p-5 space-y-4">

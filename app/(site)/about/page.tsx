@@ -51,10 +51,10 @@ export default function AboutPage() {
               <br />
               Souls of
               <br />
-              Creatives.
+              Creative.
             </h1>
             <p className="font-mono text-base text-black/80 max-w-2xl leading-relaxed">
-              Souls of Creatives is a digital magazine and social media agency
+              Souls of Creative is a digital magazine and social media agency
               dedicated to the culture of creativity. We cover fashion, music,
               art, and the people building something new — told with the depth
               and craft they deserve.

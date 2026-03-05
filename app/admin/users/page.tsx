@@ -5,12 +5,30 @@ import { createClient } from "@/lib/supabase/client";
 import { Profile, UserRole } from "@/lib/types";
 import { Users, Shield, PenLine } from "lucide-react";
 
+const SUPABASE_CONFIGURED = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
+
+const mockProfiles: Profile[] = [
+  {
+    id: "1",
+    email: "soulsofcreatives7@gmail.com",
+    role: "admin",
+    created_at: new Date().toISOString(),
+  },
+  {
+    id: "2",
+    email: "soulsofcreatives7@gmail.com",
+    role: "editor",
+    created_at: new Date().toISOString(),
+  },
+];
+
 export default function UsersPage() {
-  const [users, setUsers] = useState<Profile[]>([]);
+  const [users, setUsers] = useState<Profile[]>(mockProfiles);
   const [updating, setUpdating] = useState<string | null>(null);
   const [message, setMessage] = useState<{ text: string; type: "ok" | "err" } | null>(null);
 
   useEffect(() => {
+    if (!SUPABASE_CONFIGURED) return;
     const supabase = createClient();
     supabase
       .from("profiles")
@@ -24,6 +42,15 @@ export default function UsersPage() {
   async function changeRole(userId: string, newRole: UserRole) {
     setUpdating(userId);
     setMessage(null);
+
+    if (!SUPABASE_CONFIGURED) {
+      setUsers((prev) =>
+        prev.map((u) => (u.id === userId ? { ...u, role: newRole } : u))
+      );
+      setMessage({ text: "Role updated (dev mode — not persisted).", type: "ok" });
+      setUpdating(null);
+      return;
+    }
 
     const supabase = createClient();
     const { error } = await supabase

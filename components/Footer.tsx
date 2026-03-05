@@ -16,7 +16,7 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <h3 className="font-serif font-black text-4xl text-yellow-300 mb-3 leading-tight">
-              Souls of<br />Creatives
+              Souls of<br />Creative
             </h3>
             <p className="font-mono text-sm text-white/60 leading-relaxed">
               A digital magazine for the creative soul. Fashion, music, culture,
@@ -72,7 +72,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
           <p className="font-mono text-xs text-white/40">
-            © {new Date().getFullYear()} Souls of Creatives. All rights
+            © {new Date().getFullYear()} Souls of Creative. All rights
             reserved.
           </p>
           <Link

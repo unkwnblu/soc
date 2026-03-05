@@ -6,7 +6,7 @@ import StickerButton from "@/components/StickerButton";
 export const metadata: Metadata = {
   title: "Fashion",
   description:
-    "Fashion and style coverage from Souls of Creatives — the looks, the people, and the ideas shaping visual culture.",
+    "Fashion and style coverage from Souls of Creative — the looks, the people, and the ideas shaping visual culture.",
 };
 
 export default async function FashionPage() {

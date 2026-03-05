@@ -3,14 +3,17 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { mockCategories } from "@/lib/mock-data";
 import { Category } from "@/lib/types";
 import { slugify } from "@/lib/utils";
 import { Save, Eye, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
+const SUPABASE_CONFIGURED = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
+
 export default function NewArticlePage() {
   const router = useRouter();
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<Category[]>(mockCategories);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -27,6 +30,7 @@ export default function NewArticlePage() {
   });
 
   useEffect(() => {
+    if (!SUPABASE_CONFIGURED) return;
     const supabase = createClient();
     supabase
       .from("categories")
@@ -68,6 +72,14 @@ export default function NewArticlePage() {
   async function handleSave(publish = false) {
     setError(null);
     setSaving(true);
+
+    if (!SUPABASE_CONFIGURED) {
+      await new Promise((r) => setTimeout(r, 600));
+      setSaved(true);
+      setSaving(false);
+      setTimeout(() => router.push("/admin/articles"), 1000);
+      return;
+    }
 
     try {
       const supabase = createClient();

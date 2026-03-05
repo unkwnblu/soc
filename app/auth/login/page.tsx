@@ -21,6 +21,16 @@ function LoginForm() {
     setError(null);
     setLoading(true);
 
+    // Dev bypass — remove in production
+    if (
+      !process.env.NEXT_PUBLIC_SUPABASE_URL &&
+      email === "soulsofcreatives7@gmail.com" &&
+      password === "dev"
+    ) {
+      router.push(redirect);
+      return;
+    }
+
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -105,6 +115,11 @@ function LoginForm() {
             </div>
           </form>
 
+          {!process.env.NEXT_PUBLIC_SUPABASE_URL && (
+            <p className="font-mono text-xs text-black/40 mt-4 text-center">
+              Dev mode: use soulsofcreatives7@gmail.com / dev
+            </p>
+          )}
         </div>
       </div>
     </div>

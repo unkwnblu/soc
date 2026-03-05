@@ -16,13 +16,13 @@ const spaceMono = Space_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Souls of Creatives",
-    template: "%s | Souls of Creatives",
+    default: "Souls of Creative",
+    template: "%s | Souls of Creative",
   },
   description:
     "A digital magazine for the creative soul. Fashion, music, culture, and the people building the next wave.",
   openGraph: {
-    title: "Souls of Creatives",
+    title: "Souls of Creative",
     description:
       "A digital magazine for the creative soul. Fashion, music, culture.",
     type: "website",

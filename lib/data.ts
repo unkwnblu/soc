@@ -1,4 +1,19 @@
+/**
+ * Data layer — falls back to mock data when Supabase is not configured.
+ * Replace mock fallbacks with real queries once NEXT_PUBLIC_SUPABASE_URL is set.
+ */
 import { Article, Announcement, Category, Playlist } from "./types";
+import {
+  mockArticles,
+  mockAnnouncement,
+  mockCategories,
+  mockPlaylists,
+} from "./mock-data";
+
+const isSupabaseConfigured = Boolean(
+  process.env.NEXT_PUBLIC_SUPABASE_URL &&
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+);
 
 function transformArticle(data: Record<string, unknown>): Article {
   const articleCategories = data.article_categories as
@@ -13,13 +28,24 @@ function transformArticle(data: Record<string, unknown>): Article {
 export async function getPublishedArticles(
   categorySlug?: string
 ): Promise<Article[]> {
+  if (!isSupabaseConfigured) {
+    const articles = mockArticles.filter((a) => a.is_published);
+    return categorySlug
+      ? articles.filter((a) =>
+          a.categories?.some((c) => c.slug === categorySlug)
+        )
+      : articles;
+  }
+
   try {
     const { createClient } = await import("./supabase/server");
     const supabase = await createClient();
 
     let query = supabase
       .from("articles")
-      .select("*, author:profiles(*), article_categories(categories(*))")
+      .select(
+        "*, author:profiles(*), article_categories(categories(*))"
+      )
       .eq("is_published", true)
       .order("created_at", { ascending: false });
 
@@ -45,7 +71,12 @@ export async function getPublishedArticles(
     if (error) throw error;
     return (data ?? []).map(transformArticle);
   } catch {
-    return [];
+    const articles = mockArticles.filter((a) => a.is_published);
+    return categorySlug
+      ? articles.filter((a) =>
+          a.categories?.some((c) => c.slug === categorySlug)
+        )
+      : articles;
   }
 }
 
@@ -54,14 +85,22 @@ export async function getFeaturedArticle(): Promise<Article | null> {
   return articles[0] ?? null;
 }
 
-export async function getArticleBySlug(slug: string): Promise<Article | null> {
+export async function getArticleBySlug(
+  slug: string
+): Promise<Article | null> {
+  if (!isSupabaseConfigured) {
+    return mockArticles.find((a) => a.slug === slug) ?? null;
+  }
+
   try {
     const { createClient } = await import("./supabase/server");
     const supabase = await createClient();
 
     const { data, error } = await supabase
       .from("articles")
-      .select("*, author:profiles(*), article_categories(categories(*))")
+      .select(
+        "*, author:profiles(*), article_categories(categories(*))"
+      )
       .eq("slug", slug)
       .eq("is_published", true)
       .single();
@@ -69,11 +108,13 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
     if (error) throw error;
     return transformArticle(data);
   } catch {
-    return null;
+    return mockArticles.find((a) => a.slug === slug) ?? null;
   }
 }
 
 export async function getActiveAnnouncement(): Promise<Announcement | null> {
+  if (!isSupabaseConfigured) return mockAnnouncement;
+
   try {
     const { createClient } = await import("./supabase/server");
     const supabase = await createClient();
@@ -89,7 +130,7 @@ export async function getActiveAnnouncement(): Promise<Announcement | null> {
     if (error) return null;
     return data;
   } catch {
-    return null;
+    return mockAnnouncement;
   }
 }
 
@@ -99,6 +140,8 @@ export async function getCategoryBySlug(slug: string): Promise<Category | null> 
 }
 
 export async function getCategories(): Promise<Category[]> {
+  if (!isSupabaseConfigured) return mockCategories;
+
   try {
     const { createClient } = await import("./supabase/server");
     const supabase = await createClient();
@@ -106,11 +149,13 @@ export async function getCategories(): Promise<Category[]> {
     if (error) throw error;
     return data ?? [];
   } catch {
-    return [];
+    return mockCategories;
   }
 }
 
 export async function getPlaylists(): Promise<Playlist[]> {
+  if (!isSupabaseConfigured) return mockPlaylists;
+
   try {
     const { createClient } = await import("./supabase/server");
     const supabase = await createClient();
@@ -121,11 +166,13 @@ export async function getPlaylists(): Promise<Playlist[]> {
     if (error) throw error;
     return data ?? [];
   } catch {
-    return [];
+    return mockPlaylists;
   }
 }
 
 export async function getAllArticlesForAdmin(): Promise<Article[]> {
+  if (!isSupabaseConfigured) return mockArticles;
+
   try {
     const { createClient } = await import("./supabase/server");
     const supabase = await createClient();
@@ -136,6 +183,6 @@ export async function getAllArticlesForAdmin(): Promise<Article[]> {
     if (error) throw error;
     return (data ?? []).map(transformArticle);
   } catch {
-    return [];
+    return mockArticles;
   }
 }
