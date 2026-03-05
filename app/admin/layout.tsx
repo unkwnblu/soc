@@ -2,12 +2,7 @@ import { redirect } from "next/navigation";
 import { ExternalLink, LogOut } from "lucide-react";
 import AdminNav from "@/components/AdminNav";
 
-const SUPABASE_CONFIGURED = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
-
 async function getCurrentUser() {
-  if (!SUPABASE_CONFIGURED) {
-    return { email: "dev@soc.dev", role: "admin" as const };
-  }
   try {
     const { createClient } = await import("@/lib/supabase/server");
     const supabase = await createClient();
@@ -35,7 +30,7 @@ export default async function AdminLayout({
 }) {
   const user = await getCurrentUser();
 
-  if (!user && SUPABASE_CONFIGURED) {
+  if (!user) {
     redirect("/auth/login");
   }
 
@@ -70,8 +65,7 @@ export default async function AdminLayout({
             View Site
           </a>
 
-          {SUPABASE_CONFIGURED && (
-            <form action="/auth/signout" method="post">
+          <form action="/auth/signout" method="post">
               <button
                 type="submit"
                 className="flex items-center gap-2 font-mono text-xs text-zinc-600 hover:text-zinc-300 transition-colors w-full text-left"
@@ -80,7 +74,6 @@ export default async function AdminLayout({
                 Sign Out
               </button>
             </form>
-          )}
 
           <div className="pt-1 border-t border-white/5">
             <p className="font-mono text-[10px] text-zinc-700 truncate">

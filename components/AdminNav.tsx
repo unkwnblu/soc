@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, FileText, Megaphone, Users, ListMusic } from "lucide-react";
+import { LayoutDashboard, FileText, Megaphone, Users, ListMusic, Settings } from "lucide-react";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -10,6 +10,7 @@ const navItems = [
   { href: "/admin/playlists", label: "Playlists", icon: ListMusic },
   { href: "/admin/announcements", label: "Announcements", icon: Megaphone },
   { href: "/admin/users", label: "Users", icon: Users, adminOnly: true },
+  { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
 export default function AdminNav({ userRole }: { userRole?: string }) {

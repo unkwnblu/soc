@@ -4,33 +4,33 @@ import StickerButton from "@/components/StickerButton";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "About Souls of Creative — a digital magazine and social media agency dedicated to the culture of creativity.",
+    "About Souls of Creatives — a digital magazine and social media agency dedicated to the culture of creativity.",
 };
 
 const team = [
   {
-    name: "Zara Okonkwo",
-    title: "Editor in Chief",
-    bio: "Former fashion editor turned digital media strategist. Zara founded SOC to bridge the gap between editorial excellence and the real-time demands of social media.",
+    name: "Jegede Tobiloba",
+    title: "Editor in Chief / Creative Director",
+    bio: "Tobi founded SOC at the age of 17 beccause he wanted to build a platform where creatives can show case their art and the creative process behind said art, he wanted to put culture on the center stage.",
     location: "Lagos / London",
   },
   {
-    name: "Marcus Reid",
-    title: "Creative Director",
-    bio: "Art director and photographer whose work has appeared in i-D, Dazed, and numerous independent publications. Marcus shapes every visual decision SOC makes.",
-    location: "London",
+    name: "Clinton anifowose",
+    title: "Art Director",
+    bio: "linton joined SOC at 17 as an Art Director, bringing a strong visual perspective to the platform’s creative direction. At SOC, he helps shape the visual identity and presentation of the platform, working to spotlight emerging creatives and the stories behind their work while keeping culture and artistic expression at the forefront.",
+    location: "Lagos",
   },
   {
-    name: "Nia Baptiste",
-    title: "Music & Culture Editor",
-    bio: "Music journalist and DJ whose ear for what's next has made her one of the most sought-after tastemakers in the UK underground scene.",
-    location: "Manchester / Port of Spain",
+    name: "Alozie Ikechukwu",
+    title: "Chief Designer",
+    bio: "At the age of 18, Ikechukwu joined SOC to help drive the vision of building a platform where creatives can showcase their finished masterpieces and the creative process behind said masterpieces. Dedicated to cultural advocacy, he is committed to ensuring that the creative process is celebrated on a global scale",
+    location: "Lagos",
   },
   {
-    name: "Kofi Mensah",
-    title: "Contributing Editor",
-    bio: "Cultural critic and essayist. Kofi writes with a precision and warmth that makes even complex ideas feel like conversations.",
-    location: "Accra / Berlin",
+    name: "Agbale Dwayne",
+    title: "IT Specialist",
+    bio: "Dwayne is a tech enthusiast and problem solver who ensures that our digital infrastructure runs smoothly. With a background in IT and a passion for innovation, he keeps our online presence secure and efficient. He built the website and maintains it, ensuring that our content is always accessible to our audience.",
+    location: "Lagos / England",
   },
 ];
 
@@ -72,22 +72,13 @@ export default function AboutPage() {
             </h2>
             <div className="space-y-4 font-mono text-sm text-black/80 leading-relaxed">
               <p>
-                We started SOC because we believed that creative culture
-                deserved better coverage. Not the breathless hype cycles. Not
-                the algorithm-optimized hot takes. Just good, honest,
-                beautifully-made editorial — the kind that respects both the
-                subject and the reader.
+                We founded SoC because visibility shouldn't be a byproduct of an algorithm; it should be the result of exceptional craft. In a world of fleeting digital noise, we believe the creative process is just as vital as the final piece. We exist to give creatives the stage, the spotlight, and the permanence they deserve
               </p>
               <p>
-                As a social media agency, we help brands speak in the language
-                of culture — authentically, consistently, and with the kind of
-                visual clarity that makes people stop scrolling and start
-                feeling something.
+                Our platform isn't just a showcase—it’s a cultural bridge. Whether through immersive pop-ups, curated concerts, or high-fidelity digital storytelling, we connect visionary artists with the global audience that needs them. We don’t just broadcast culture; we help build it.
               </p>
               <p>
-                Everything we publish, every campaign we build, is guided by a
-                single question: <em>Does this add something real to the
-                conversation?</em>
+                Every feature we publish and every event we will produce will be  guided by a single commitment: to showcase creativity and culture on the biggest of stages 
               </p>
             </div>
           </div>
@@ -194,7 +185,7 @@ export default function AboutPage() {
             We&apos;re always open to interesting collaborations — editorial,
             agency, and creative partnerships.
           </p>
-          <StickerButton href="mailto:hello@soulsofcreative.com" variant="black" rotate="1">
+          <StickerButton href="mailto:soulsofcreatives7@gmail.com" variant="black" rotate="1">
             Get in Touch →
           </StickerButton>
         </div>

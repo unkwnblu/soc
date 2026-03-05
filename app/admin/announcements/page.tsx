@@ -2,16 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { mockAnnouncement } from "@/lib/mock-data";
 import { Announcement } from "@/lib/types";
 import { Plus, Megaphone, Trash2, Dot } from "lucide-react";
 
-const SUPABASE_CONFIGURED = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
-
 export default function AnnouncementsPage() {
-  const [announcements, setAnnouncements] = useState<Announcement[]>([
-    mockAnnouncement,
-  ]);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ text: string; type: "ok" | "err" } | null>(null);
 
@@ -23,7 +18,6 @@ export default function AnnouncementsPage() {
   });
 
   useEffect(() => {
-    if (!SUPABASE_CONFIGURED) return;
     const supabase = createClient();
     supabase
       .from("announcements")
@@ -38,21 +32,6 @@ export default function AnnouncementsPage() {
     e.preventDefault();
     setSaving(true);
     setMessage(null);
-
-    if (!SUPABASE_CONFIGURED) {
-      const mock: Announcement = {
-        id: Date.now().toString(),
-        ...newForm,
-        cta_url: newForm.cta_url || undefined,
-        expires_at: newForm.expires_at || undefined,
-        created_at: new Date().toISOString(),
-      };
-      setAnnouncements((prev) => [mock, ...prev]);
-      setNewForm({ message: "", cta_url: "", expires_at: "", is_active: true });
-      setMessage({ text: "Saved (dev mode — not persisted).", type: "ok" });
-      setSaving(false);
-      return;
-    }
 
     const supabase = createClient();
     const { data, error } = await supabase
@@ -77,12 +56,6 @@ export default function AnnouncementsPage() {
   }
 
   async function toggleActive(id: string, current: boolean) {
-    if (!SUPABASE_CONFIGURED) {
-      setAnnouncements((prev) =>
-        prev.map((a) => (a.id === id ? { ...a, is_active: !current } : a))
-      );
-      return;
-    }
     const supabase = createClient();
     await supabase.from("announcements").update({ is_active: !current }).eq("id", id);
     setAnnouncements((prev) =>
@@ -91,10 +64,6 @@ export default function AnnouncementsPage() {
   }
 
   async function deleteAnnouncement(id: string) {
-    if (!SUPABASE_CONFIGURED) {
-      setAnnouncements((prev) => prev.filter((a) => a.id !== id));
-      return;
-    }
     const supabase = createClient();
     await supabase.from("announcements").delete().eq("id", id);
     setAnnouncements((prev) => prev.filter((a) => a.id !== id));

@@ -19,7 +19,7 @@ export const mockAnnouncement: Announcement = {
 
 const staffWriter = {
   id: "1",
-  email: "editor@soulsofcreative.com",
+  email: "soulsofcreatives7@gmail.com",
   role: "editor" as const,
   created_at: new Date().toISOString(),
 };
