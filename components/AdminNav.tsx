@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, FileText, Megaphone, Users } from "lucide-react";
+import { LayoutDashboard, FileText, Megaphone, Users, ListMusic } from "lucide-react";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/articles", label: "Articles", icon: FileText },
+  { href: "/admin/playlists", label: "Playlists", icon: ListMusic },
   { href: "/admin/announcements", label: "Announcements", icon: Megaphone },
   { href: "/admin/users", label: "Users", icon: Users, adminOnly: true },
 ];
