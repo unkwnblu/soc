@@ -21,16 +21,6 @@ function LoginForm() {
     setError(null);
     setLoading(true);
 
-    // Dev bypass — remove in production
-    if (
-      !process.env.NEXT_PUBLIC_SUPABASE_URL &&
-      email === "soulsofcreatives7@gmail.com" &&
-      password === "dev"
-    ) {
-      router.push(redirect);
-      return;
-    }
-
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithPassword({
       email,
