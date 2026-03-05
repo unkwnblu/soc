@@ -33,8 +33,8 @@ function LoginForm() {
       return;
     }
 
-    router.push(redirect);
     router.refresh();
+    router.push(redirect);
   }
 
   return (
@@ -45,7 +45,7 @@ function LoginForm() {
           <h1 className="font-serif font-black text-5xl text-black leading-tight">
             Souls of
             <br />
-            Creative
+            Creatives
           </h1>
           <p className="font-mono text-sm text-black/60 mt-2">CMS Access</p>
         </div>
