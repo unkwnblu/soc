@@ -49,18 +49,22 @@ export default function Footer() {
               Connect
             </h4>
             <ul className="space-y-2">
-              {["Instagram", "Twitter / X", "Spotify", "YouTube"].map(
-                (platform) => (
-                  <li key={platform}>
-                    <a
-                      href="#"
-                      className="font-mono text-sm text-white/60 hover:text-yellow-300 transition-colors"
-                    >
-                      {platform}
-                    </a>
-                  </li>
-                )
-              )}
+              {[
+                { label: "Instagram", href: "https://www.instagram.com/soulsofcreatives?igsh=dmEzb2NlMDM1MGl6" },
+                { label: "Twitter / X", href: "https://x.com/soulsofcreative?s=11" },
+                { label: "TikTok", href: "https://www.tiktok.com/@soulsofcreatives?_r=1&_t=ZS-94R46ffJ2ds" },
+              ].map((social) => (
+                <li key={social.label}>
+                  <a
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-mono text-sm text-white/60 hover:text-yellow-300 transition-colors"
+                  >
+                    {social.label}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
         </div>

@@ -101,7 +101,11 @@ export default function NewArticlePage() {
         .select()
         .single();
 
-      if (articleError) throw articleError;
+      if (articleError) {
+        setError(articleError.message ?? "Failed to save article.");
+        setSaving(false);
+        return;
+      }
 
       if (form.selectedCategories.length > 0) {
         await supabase.from("article_categories").insert(
@@ -115,7 +119,11 @@ export default function NewArticlePage() {
       setSaved(true);
       setTimeout(() => router.push("/admin/articles"), 800);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to save article.");
+      const msg =
+        err instanceof Error
+          ? err.message
+          : (err as { message?: string })?.message ?? "Failed to save article.";
+      setError(msg);
       setSaving(false);
     }
   }

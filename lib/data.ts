@@ -134,6 +134,11 @@ export async function getActiveAnnouncement(): Promise<Announcement | null> {
   }
 }
 
+export async function getCategoryBySlug(slug: string): Promise<Category | null> {
+  const cats = await getCategories();
+  return cats.find((c) => c.slug === slug) ?? null;
+}
+
 export async function getCategories(): Promise<Category[]> {
   if (!isSupabaseConfigured) return mockCategories;
 

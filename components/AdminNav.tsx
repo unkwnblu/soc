@@ -2,29 +2,23 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LucideIcon } from "lucide-react";
+import { LayoutDashboard, FileText, Megaphone, Users } from "lucide-react";
 
-interface NavItem {
-  href: string;
-  label: string;
-  icon: LucideIcon;
-  adminOnly?: boolean;
-}
+const navItems = [
+  { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/articles", label: "Articles", icon: FileText },
+  { href: "/admin/announcements", label: "Announcements", icon: Megaphone },
+  { href: "/admin/users", label: "Users", icon: Users, adminOnly: true },
+];
 
-interface Props {
-  items: NavItem[];
-  userRole?: string;
-}
-
-export default function AdminNav({ items, userRole }: Props) {
+export default function AdminNav({ userRole }: { userRole?: string }) {
   const pathname = usePathname();
 
   return (
     <nav className="flex-1 px-3 py-4 space-y-0.5">
-      {items.map((item) => {
+      {navItems.map((item) => {
         if (item.adminOnly && userRole !== "admin") return null;
         const Icon = item.icon;
-        // Active if exact match for dashboard, or starts-with for sub-pages
         const isActive =
           item.href === "/admin"
             ? pathname === "/admin"

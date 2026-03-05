@@ -71,6 +71,25 @@ CREATE TABLE playlists (
 );
 
 -- ============================================================
+-- Helper Functions (must come before policies that use them)
+-- ============================================================
+
+-- Bypass RLS on profiles to check roles (SECURITY DEFINER runs as table owner)
+CREATE OR REPLACE FUNCTION is_admin()
+RETURNS BOOLEAN AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'
+  );
+$$ LANGUAGE sql SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION is_editor_or_admin()
+RETURNS BOOLEAN AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM profiles WHERE id = auth.uid() AND role IN ('editor', 'admin')
+  );
+$$ LANGUAGE sql SECURITY DEFINER;
+
+-- ============================================================
 -- Row Level Security
 -- ============================================================
 
@@ -112,38 +131,28 @@ CREATE POLICY "Public can view playlists"
 
 CREATE POLICY "Editors can manage articles"
   ON articles FOR ALL
-  USING (
-    auth.uid() IS NOT NULL AND
-    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role IN ('editor', 'admin'))
-  );
+  USING (is_editor_or_admin())
+  WITH CHECK (is_editor_or_admin());
 
 CREATE POLICY "Editors can manage article_categories"
   ON article_categories FOR ALL
-  USING (
-    auth.uid() IS NOT NULL AND
-    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role IN ('editor', 'admin'))
-  );
+  USING (is_editor_or_admin())
+  WITH CHECK (is_editor_or_admin());
 
 CREATE POLICY "Editors can manage media"
   ON media FOR ALL
-  USING (
-    auth.uid() IS NOT NULL AND
-    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role IN ('editor', 'admin'))
-  );
+  USING (is_editor_or_admin())
+  WITH CHECK (is_editor_or_admin());
 
 CREATE POLICY "Editors can manage playlists"
   ON playlists FOR ALL
-  USING (
-    auth.uid() IS NOT NULL AND
-    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role IN ('editor', 'admin'))
-  );
+  USING (is_editor_or_admin())
+  WITH CHECK (is_editor_or_admin());
 
 CREATE POLICY "Editors can manage announcements"
   ON announcements FOR ALL
-  USING (
-    auth.uid() IS NOT NULL AND
-    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role IN ('editor', 'admin'))
-  );
+  USING (is_editor_or_admin())
+  WITH CHECK (is_editor_or_admin());
 
 -- ============================================================
 -- Profile Policies
@@ -155,15 +164,12 @@ CREATE POLICY "Users can view their own profile"
 
 CREATE POLICY "Admins can view all profiles"
   ON profiles FOR SELECT
-  USING (
-    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
-  );
+  USING (is_admin());
 
 CREATE POLICY "Admins can update profiles"
   ON profiles FOR UPDATE
-  USING (
-    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
-  );
+  USING (is_admin())
+  WITH CHECK (is_admin());
 
 -- ============================================================
 -- Auto-create Profile on Signup Trigger

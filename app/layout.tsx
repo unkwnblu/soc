@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Space_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import EventsBanner from "@/components/EventsBanner";
-import { getActiveAnnouncement } from "@/lib/data";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -33,23 +29,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const announcement = await getActiveAnnouncement();
-
   return (
-    <html
-      lang="en"
-      className={`${playfair.variable} ${spaceMono.variable}`}
-    >
+    <html lang="en" className={`${playfair.variable} ${spaceMono.variable}`}>
       <body className="antialiased min-h-screen flex flex-col">
-        <EventsBanner announcement={announcement} />
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        {children}
       </body>
     </html>
   );

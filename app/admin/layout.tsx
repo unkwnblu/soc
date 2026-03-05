@@ -1,12 +1,5 @@
 import { redirect } from "next/navigation";
-import {
-  LayoutDashboard,
-  FileText,
-  Megaphone,
-  Users,
-  ExternalLink,
-  LogOut,
-} from "lucide-react";
+import { ExternalLink, LogOut } from "lucide-react";
 import AdminNav from "@/components/AdminNav";
 
 const SUPABASE_CONFIGURED = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
@@ -34,13 +27,6 @@ async function getCurrentUser() {
     return null;
   }
 }
-
-export const navItems = [
-  { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/articles", label: "Articles", icon: FileText },
-  { href: "/admin/announcements", label: "Announcements", icon: Megaphone },
-  { href: "/admin/users", label: "Users", icon: Users, adminOnly: true },
-];
 
 export default async function AdminLayout({
   children,
@@ -71,7 +57,7 @@ export default async function AdminLayout({
         </div>
 
         {/* Nav — client component for active state */}
-        <AdminNav items={navItems} userRole={user?.role} />
+        <AdminNav userRole={user?.role} />
 
         {/* Footer */}
         <div className="mt-auto border-t border-white/5 px-5 py-4 space-y-3">
@@ -109,7 +95,7 @@ export default async function AdminLayout({
 
       {/* Main content — scrolls independently */}
       <main className="flex-1 overflow-y-auto">
-        <div className="p-8 max-w-5xl">{children}</div>
+        <div className="p-8">{children}</div>
       </main>
     </div>
   );
